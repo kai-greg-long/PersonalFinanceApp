@@ -1,0 +1,23 @@
+:root {
+    --prim-color: #129e05;
+    --sec-color: #ffc444;
+}
+
+.header{
+    font-family: 'Arial', sans-serif;
+    background: var(--sec-color);
+    color: var(--prim-color);
+    font-size: 2.5em;
+    text-align: center;
+}
+
+.buttons button{
+    display: flex;
+    gap: 10px;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    background: var(--sec-color);
+    color: var(--prim-color);
+    border-radius: 5px;
+}
+
