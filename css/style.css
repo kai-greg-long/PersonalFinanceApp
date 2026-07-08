@@ -1,10 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
 :root {
     --prim-color: #129e05;
     --sec-color: #ffc444;
 }
 
 .header{
-    font-family: 'Arial', sans-serif;
+    font-family: "Lobster", sans-serif;
     background: var(--sec-color);
     color: var(--prim-color);
     font-size: 2.5em;
@@ -13,11 +15,20 @@
 
 .buttons button{
     display: flex;
+    padding: 12px 24px;
+    font-size: 1.5em;
     gap: 10px;
-    font-family: 'Arial', sans-serif;
+    font-family: "Lobster", sans-serif;
     font-weight: bold;
     background: var(--sec-color);
     color: var(--prim-color);
     border-radius: 5px;
+}
+.form{
+    font-family: "Lobster", sans-serif;
+    background: var(--sec-color);
+    color: var(--prim-color);
+    font-size: 1.5em;
+    text-align: left;
 }
 
