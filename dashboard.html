@@ -13,7 +13,25 @@
     </div>
     <h1>Monthly Income</h1>
     <p>placeholder for pie graph</p>
+    
+    
+    <section class="category-section">
     <h1>Budget Categories</h1>
+
+    <form id="category-form" class="category-form">
+        <input id="category-symbol" type="text" placeholder="Symbol, ex: 🍔" maxlength="2">
+        <input id="category-name" type="text" placeholder="Category name" required>
+        <input id="category-limit" type="number" placeholder="Monthly limit" required>
+        <button type="submit">Add Category</button>
+    </form>
+
+    <div id="category-list" class="category-list"></div>
+</section>
+    </div>
     <h1>Difference between Income and Total Expenses</h1>
+    <div>
+        
+    </div>
+<script type="module" src="src/dashboard.ts"></script>
 </body>
 </html>
