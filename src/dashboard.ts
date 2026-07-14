@@ -41,14 +41,40 @@ async function fetchCategories() {
             <h3>${category.name}</h3>
             <p>Limit: $${category.limit}</p>
             <p>Remaining: $${category.amount_remaining}</p>
-            <button class="delete-category" data-id="${category.id}">
+            <button class="delete-category" data-id="${category.category_id}">
                 Delete
             </button>
         `;
         categoryList.appendChild(card);
     });
-      
 }
+
+categoryList.addEventListener('click', async (event) => {
+        const target = event.target as HTMLElement;
+        const deleteButton = target.closest('.delete-category') as HTMLButtonElement | null;
+        
+        if (!deleteButton) {
+        return;
+        }
+        
+        const categoryId = deleteButton.dataset.id;
+        
+        if (!categoryId) {
+            alert('Category ID not found.');
+            return;
+        }
+
+        const { error } = await supabase
+            .from('budget_categories')
+            .delete()
+            .eq('category_id', categoryId);
+
+        if (error) {
+            alert(error.message);
+        } else {
+            await fetchCategories();
+        }
+});
 
 await fetchCategories();
 
