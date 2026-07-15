@@ -1,5 +1,3 @@
-console.log('signup.ts loaded');
-
 import { supabase } from './supabaseClient';
 
 const signupForm = document.querySelector('#signup-form') as HTMLFormElement;

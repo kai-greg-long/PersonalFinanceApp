@@ -11,11 +11,15 @@
     <div class="header">
         <h1>Dashboard</h1>
     </div>
-    <h1>Monthly Income</h1>
-    <p>placeholder for pie graph</p>
+
+    <section class="income-section">
+        <h1>Monthly Income</h1>
+        <div class="income-chart-wrapper">
+            <canvas id="income-chart"></canvas>
+        </div>
+    </section>
     
-    
-    <section class="category-section">
+<section class="category-section">
     <h1>Budget Categories</h1>
 
     <form id="category-form" class="category-form">
@@ -27,11 +31,21 @@
 
     <div id="category-list" class="category-list"></div>
 </section>
-    </div>
+    
+<section class = "transaction-section">  
     <h1>Transactions</h1>
     <div>
-        
+        <form id="transaction-form" class="transaction-form">
+            <input id="transaction-description" type="text" placeholder="Description" required>
+            <input id="transaction-amount" type="number" placeholder="Amount" required>
+            <select id="transaction-category" placeholder="Category name" required>
+                <option value="">Select a category</option>
+            </select>
+            <button type="submit">Add Transaction</button>
+        </form>
     </div>
+</section>      
+
 <script type="module" src="src/dashboard.ts"></script>
 </body>
 </html>

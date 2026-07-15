@@ -1,5 +1,3 @@
-console.log('login.ts loaded');
-
 import { supabase } from './supabaseClient';
 
 const loginForm = document.querySelector('#login-form') as HTMLFormElement;
