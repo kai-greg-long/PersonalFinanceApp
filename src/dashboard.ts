@@ -200,6 +200,30 @@ async function populateTransactionCategories(categories: any[]) {
     });
 }
 
+async function updateCategoryRemaining(categoryId: string, amountToSubtract: number) {
+    const { data: category, error: fetchError } = await supabase
+        .from('budget_categories')
+        .select('amount_remaining')
+        .eq('category_id', categoryId)
+        .single();
+
+    if (fetchError) {
+        throw new Error(fetchError.message);
+    }
+
+    const currentRemaining = Number(category?.amount_remaining) || 0;
+    const newRemaining = currentRemaining - amountToSubtract;
+
+    const { error: updateError } = await supabase
+        .from('budget_categories')
+        .update({ amount_remaining: newRemaining })
+        .eq('category_id', categoryId);
+
+    if (updateError) {
+        throw new Error(updateError.message);
+    }
+}
+
 incomeForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -234,6 +258,7 @@ transactionForm.addEventListener('submit', async (event) => {
     const amountInput = (document.querySelector('#transaction-amount')) as HTMLInputElement;
     const categoryInput = document.querySelector('#transaction-category') as HTMLSelectElement;
     const dateInput = document.querySelector('#transaction-date') as HTMLInputElement;
+    const amountValue = parseFloat(amountInput.value);
 
     const { data: userData, error: userError } = await supabase.auth.getUser();
 
@@ -241,27 +266,58 @@ transactionForm.addEventListener('submit', async (event) => {
         alert('You must be logged in to add a transaction.');
         return;
     }
+
+    if (!categoryInput.value) {
+        alert('Please select a category.');
+        return;
+    }
+
+    if (Number.isNaN(amountValue) || amountValue <= 0) {
+        alert('Please enter a valid transaction amount.');
+        return;
+    }
+
     const user = userData.user;
 
-    const {error: transactionError} = await supabase
-    .from('transactions')
-    .insert({
-        label: descriptionInput.value,
-        amount: parseFloat(amountInput.value),
-        category_id: categoryInput.value,
-        created_at: new Date().toISOString(),
-        transaction_date: dateInput.value,
-        user_id: user.id
-    });
+    const { data: createdTransaction, error: transactionError } = await supabase
+        .from('transactions')
+        .insert({
+            label: descriptionInput.value,
+            amount: amountValue,
+            category_id: categoryInput.value,
+            created_at: new Date().toISOString(),
+            transaction_date: dateInput.value,
+            user_id: user.id
+        })
+        .select('transaction_id')
+        .single();
 
-    if (transactionError) {
-    alert(transactionError.message);
-    console.error(transactionError);
-    return;
-}
+        if (transactionError) {
+            alert(transactionError.message);
+            console.error(transactionError);
+            return;
+        }
 
-    alert('Transaction added successfully.');
+    try {
+        await updateCategoryRemaining(categoryInput.value, amountValue);
+    } catch (updateRemainingError) {
+            if (createdTransaction?.transaction_id) {
+                await supabase
+                    .from('transactions')
+                    .delete()
+                    .eq('transaction_id', createdTransaction.transaction_id);
+            }
+
+        const errorMessage = updateRemainingError instanceof Error
+            ? updateRemainingError.message
+                : 'Failed to update category remaining amount. Transaction was reverted.';
+        alert(errorMessage);
+            return;
+    }
+
+        alert('Transaction added successfully.');
     transactionForm.reset();
+    await fetchCategories();
     await fetchTransactions();
 });
 
