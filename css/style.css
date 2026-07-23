@@ -6,6 +6,7 @@
 }
 
 .header{
+    position: relative;
     font-family: "Lobster", sans-serif;
     background: var(--sec-color);
     color: var(--prim-color);

@@ -1,6 +1,12 @@
 import Chart from 'chart.js/auto';
 import { supabase } from './supabaseClient';
 
+const logoutBtn = document.querySelector('#logout-btn') as HTMLButtonElement;
+logoutBtn?.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    window.location.href = 'index.html';
+});
+
 const incomeForm = document.querySelector('#income-form') as HTMLFormElement;
 const transactionList = document.querySelector('#transaction-list') as HTMLDivElement;
 const transactionForm = document.querySelector('#transaction-form') as HTMLFormElement;
