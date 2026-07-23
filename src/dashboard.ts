@@ -1,6 +1,8 @@
 import Chart from 'chart.js/auto';
 import { supabase } from './supabaseClient';
 
+const incomeForm = document.querySelector('#income-form') as HTMLFormElement;
+const transactionList = document.querySelector('#transaction-list') as HTMLDivElement;
 const transactionForm = document.querySelector('#transaction-form') as HTMLFormElement;
 const transactionCategory = document.querySelector('#transaction-category') as HTMLSelectElement;
 const incomeChartCanvas = document.querySelector('#income-chart') as HTMLCanvasElement;
@@ -14,7 +16,7 @@ let incomeChart: Chart<'doughnut'> | null = null;
 
 function renderIncomeChart(Categories: any[]) {
 
-    const monthly_income = 3000; // Replace with actual monthly income value
+    const monthly_income = Number((document.querySelector('#income-amount') as HTMLInputElement).value) || 0;
     const labels = Categories.map(category => category.name);
     const categoryAmounts = Categories.map(category => Number(category.limit));
     const totalBudgeted = categoryAmounts.reduce((acc, amount) => acc + amount, 0);
@@ -80,6 +82,74 @@ async function getUser() {
     return userData.user;
 }   
 
+async function fetchIncome() {
+    const user = await getUser();
+
+    if (!user) {
+        alert('You must be logged in to view your income.');
+        return;
+    }
+
+    const { data: incomeData, error: incomeError } = await supabase
+        .from('accounts')
+        .select('income')
+        .eq('user_id', user.id)
+        .single();
+
+    if (incomeError) {
+        alert(incomeError.message);
+        return;
+    }
+
+    const incomeInput = document.querySelector('#income-amount') as HTMLInputElement;
+    if (incomeInput && incomeData.income) {
+        incomeInput.value = incomeData.income;
+    }
+
+    return incomeData.income;
+}
+
+async function fetchTransactions() {
+    const user = await getUser();
+
+    if (!user) {
+        alert('You must be logged in to view transactions.');
+        return;
+    }
+
+    const { data: transactions, error: transactionError } = await supabase
+        .from('transactions')
+        .select('*, budget_categories(symbol, name)')
+        .eq('user_id', user.id)
+        .order('transaction_date', { ascending: false });
+
+    if (transactionError) {
+        alert(transactionError.message);
+        return;
+    }
+    
+    transactionList.innerHTML = '';
+
+    transactions.forEach((transaction) => {
+        const transactionItem = document.createElement('div');
+        transactionItem.className = 'transaction-item';
+        const categorySymbol = transaction.budget_categories?.symbol || '💵';
+        const categoryName = transaction.budget_categories?.name || 'Uncategorized';
+        transactionItem.innerHTML = `
+            <div class="category-symbol">${categorySymbol}</div>
+            <h3>${transaction.label}</h3>
+            <p>Category: ${categoryName}</p>
+            <p>$${transaction.amount}</p>
+            <p>${new Date(transaction.transaction_date).toLocaleDateString()}</p>
+            <button class="delete-transaction" data-id="${transaction.transaction_id}">
+                Delete
+            </button>
+        `;
+        transactionList.appendChild(transactionItem);
+    });
+
+}
+
 async function fetchCategories() {
     const user = await getUser();
 
@@ -114,7 +184,7 @@ async function fetchCategories() {
         `;
         categoryList.appendChild(card);
     });
-    renderIncomeChart(categories);
+    await renderIncomeChart(categories);
     populateTransactionCategories(categories);
 }
 
@@ -130,12 +200,40 @@ async function populateTransactionCategories(categories: any[]) {
     });
 }
 
+incomeForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const incomeInput = document.querySelector('#income-amount') as HTMLInputElement;
+    const {data: userData, error: userError } = await supabase.auth.getUser();
+
+    if (userError || !userData.user) {
+        alert('You must be logged in to set your income.');
+        return;
+    }
+
+    const user = userData.user;
+
+    const { error: incomeError } = await supabase
+        .from('accounts')
+        .update({ income: parseFloat(incomeInput.value) })
+        .eq('user_id', user.id);
+    
+        if (incomeError) {
+            alert(incomeError.message);
+            return;
+        }
+    alert('Income updated successfully.');
+    await fetchCategories();
+    incomeForm.reset();
+});    
+
 transactionForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const descriptionInput = document.querySelector('#transaction-description') as HTMLInputElement;
     const amountInput = (document.querySelector('#transaction-amount')) as HTMLInputElement;
     const categoryInput = document.querySelector('#transaction-category') as HTMLSelectElement;
+    const dateInput = document.querySelector('#transaction-date') as HTMLInputElement;
 
     const { data: userData, error: userError } = await supabase.auth.getUser();
 
@@ -152,8 +250,19 @@ transactionForm.addEventListener('submit', async (event) => {
         amount: parseFloat(amountInput.value),
         category_id: categoryInput.value,
         created_at: new Date().toISOString(),
+        transaction_date: dateInput.value,
         user_id: user.id
     });
+
+    if (transactionError) {
+    alert(transactionError.message);
+    console.error(transactionError);
+    return;
+}
+
+    alert('Transaction added successfully.');
+    transactionForm.reset();
+    await fetchTransactions();
 });
 
 categoryList.addEventListener('click', async (event) => {
@@ -183,7 +292,36 @@ categoryList.addEventListener('click', async (event) => {
         }
 });
 
+transactionList.addEventListener('click', async (event) => {
+        const target = event.target as HTMLElement;
+        const deleteButton = target.closest('.delete-transaction') as HTMLButtonElement | null;
+        
+        if (!deleteButton) {
+        return;
+        }
+        
+        const transactionId = deleteButton.dataset.id;
+        
+        if (!transactionId) {
+            alert('Transaction ID not found.');
+            return;
+        }
+
+        const { error } = await supabase
+            .from('transactions')
+            .delete()
+            .eq('transaction_id', transactionId);
+
+        if (error) {
+            alert(error.message);
+        } else {
+            await fetchTransactions();
+        }
+});
+
+await fetchIncome();
 await fetchCategories();
+await fetchTransactions();
 
 categoryForm.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -218,6 +356,7 @@ categoryForm.addEventListener('submit', async (event) => {
     }
 
 alert('Category added successfully.');
+categoryForm.reset();
 await fetchCategories();
 });
 

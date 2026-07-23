@@ -3,7 +3,7 @@
     "dev": "vite"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.110.1",
+    "@supabase/supabase-js": "^2.110.8",
     "chart.js": "^4.5.1"
   },
   "devDependencies": {

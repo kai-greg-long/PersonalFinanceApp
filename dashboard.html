@@ -14,6 +14,11 @@
 
     <section class="income-section">
         <h1>Monthly Income</h1>
+        <form id="income-form" class="income-form">
+            <input id="income-amount" type="number" placeholder="Enter your monthly income" required>
+            <button type="submit">Set Income</button>
+        </form>
+        
         <div class="income-chart-wrapper">
             <canvas id="income-chart"></canvas>
         </div>
@@ -34,16 +39,18 @@
     
 <section class = "transaction-section">  
     <h1>Transactions</h1>
-    <div>
+
         <form id="transaction-form" class="transaction-form">
             <input id="transaction-description" type="text" placeholder="Description" required>
             <input id="transaction-amount" type="number" placeholder="Amount" required>
-            <select id="transaction-category" placeholder="Category name" required>
+            <select id="transaction-category" aria-label="Transaction category" placeholder="Category name" required>
                 <option value="">Select a category</option>
             </select>
+            <input id="transaction-date" type="date" aria-label="Transaction date" required>
             <button type="submit">Add Transaction</button>
         </form>
-    </div>
+
+        <div id="transaction-list" class="transaction-list"></div>
 </section>      
 
 <script type="module" src="src/dashboard.ts"></script>

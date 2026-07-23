@@ -31,6 +31,15 @@
     font-size: 1.5em;
     text-align: left;
 }
+
+.category-form,
+.transaction-form {
+    font-family: "Lobster", sans-serif;
+    color: var(--prim-color);
+    font-size: 1.5em;
+    text-align: left;
+    margin-bottom: 20px;
+}
 .category-item {
     width: 180px;
     min-height: 160px;
@@ -45,13 +54,18 @@
     flex-wrap: wrap;
 }
 
-.category-item {
+.transaction-item {
     width: 180px;
     min-height: 160px;
     padding: 18px;
     border-radius: 18px;
     background: white;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.transaction-list {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
 }
 
 .category-symbol {
@@ -66,7 +80,24 @@
     margin: 6px 0;
 }
 
+.transaction-item h3 {
+    margin: 10px 0;
+}
+
+.transaction-item p {
+    margin: 6px 0;
+    font-size: 0.9em;
+}
+
 .delete-category {
+    margin-top: 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.delete-transaction {
     margin-top: 12px;
     padding: 8px 12px;
     border-radius: 8px;
