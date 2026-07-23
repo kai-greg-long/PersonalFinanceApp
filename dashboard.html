@@ -9,50 +9,51 @@
  
 <body>
     <div class="header">
-        <button id="logout-btn" style="position:absolute;top:12px;left:16px;font-family:'Lobster',sans-serif;font-size:0.5em;padding:8px 16px;background:var(--prim-color);color:var(--sec-color);border:none;border-radius:5px;cursor:pointer;">Log Out</button>
+        <button id="logout-btn">Log Out</button>
         <h1>Dashboard</h1>
     </div>
 
+<main class="dashboard-main">
+
     <section class="income-section">
-        <h1>Monthly Income</h1>
-        <form id="income-form" class="income-form">
-            <input id="income-amount" type="number" placeholder="Enter your monthly income" required>
-            <button type="submit">Set Income</button>
-        </form>
-        
-        <div class="income-chart-wrapper">
-            <canvas id="income-chart"></canvas>
+        <h1 class="section-title">Monthly Income</h1>
+        <div class="income-content">
+            <form id="income-form" class="income-form">
+                <input id="income-amount" type="number" placeholder="Enter your monthly income" required>
+                <button type="submit">Set Income</button>
+            </form>
+            <div class="income-chart-wrapper">
+                <canvas id="income-chart"></canvas>
+            </div>
         </div>
     </section>
-    
-<section class="category-section">
-    <h1>Budget Categories</h1>
 
-    <form id="category-form" class="category-form">
-        <input id="category-symbol" type="text" placeholder="Symbol, ex: 🍔" maxlength="2">
-        <input id="category-name" type="text" placeholder="Category name" required>
-        <input id="category-limit" type="number" placeholder="Monthly limit" required>
-        <button type="submit">Add Category</button>
-    </form>
+    <section class="category-section">
+        <h1 class="section-title">Budget Categories</h1>
+        <form id="category-form" class="category-form">
+            <input id="category-symbol" type="text" placeholder="Symbol, ex: 🍔" maxlength="2">
+            <input id="category-name" type="text" placeholder="Category name" required>
+            <input id="category-limit" type="number" placeholder="Monthly limit" required>
+            <button type="submit">Add Category</button>
+        </form>
+        <div id="category-list" class="category-list"></div>
+    </section>
 
-    <div id="category-list" class="category-list"></div>
-</section>
-    
-<section class = "transaction-section">  
-    <h1>Transactions</h1>
-
+    <section class="transaction-section">
+        <h1 class="section-title">Transactions</h1>
         <form id="transaction-form" class="transaction-form">
             <input id="transaction-description" type="text" placeholder="Description" required>
             <input id="transaction-amount" type="number" placeholder="Amount" required>
-            <select id="transaction-category" aria-label="Transaction category" placeholder="Category name" required>
+            <select id="transaction-category" aria-label="Transaction category" required>
                 <option value="">Select a category</option>
             </select>
             <input id="transaction-date" type="date" aria-label="Transaction date" required>
             <button type="submit">Add Transaction</button>
         </form>
-
         <div id="transaction-list" class="transaction-list"></div>
-</section>      
+    </section>
+
+</main>      
 
 <script type="module" src="src/dashboard.ts"></script>
 </body>
