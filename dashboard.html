@@ -7,52 +7,55 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
  
-<body>
-    <div class="header">
-        <button id="logout-btn" style="position:absolute;top:12px;left:16px;font-family:'Lobster',sans-serif;font-size:0.5em;padding:8px 16px;background:var(--prim-color);color:var(--sec-color);border:none;border-radius:5px;cursor:pointer;">Log Out</button>
+<body class="dashboard-page">
+    <header class="header dashboard-header">
+        <button id="logout-btn" class="logout-btn">Log Out</button>
         <h1>Dashboard</h1>
-    </div>
+        <p class="dashboard-subtitle">Track your budget and keep spending under control.</p>
+    </header>
 
-    <section class="income-section">
-        <h1>Monthly Income</h1>
-        <form id="income-form" class="income-form">
-            <input id="income-amount" type="number" placeholder="Enter your monthly income" required>
-            <button type="submit">Set Income</button>
-        </form>
-        
-        <div class="income-chart-wrapper">
-            <canvas id="income-chart"></canvas>
-        </div>
-    </section>
-    
-<section class="category-section">
-    <h1>Budget Categories</h1>
+    <main class="dashboard-shell">
+        <section class="income-section dashboard-card dashboard-card-wide">
+            <h2>Monthly Income</h2>
+            <form id="income-form" class="income-form">
+                <input id="income-amount" type="number" placeholder="Enter your monthly income" required>
+                <button type="submit">Set Income</button>
+            </form>
 
-    <form id="category-form" class="category-form">
-        <input id="category-symbol" type="text" placeholder="Symbol, ex: 🍔" maxlength="2">
-        <input id="category-name" type="text" placeholder="Category name" required>
-        <input id="category-limit" type="number" placeholder="Monthly limit" required>
-        <button type="submit">Add Category</button>
-    </form>
+            <div class="income-chart-wrapper">
+                <canvas id="income-chart"></canvas>
+            </div>
+        </section>
 
-    <div id="category-list" class="category-list"></div>
-</section>
-    
-<section class = "transaction-section">  
-    <h1>Transactions</h1>
+        <section class="category-section dashboard-card">
+            <h2>Budget Categories</h2>
 
-        <form id="transaction-form" class="transaction-form">
-            <input id="transaction-description" type="text" placeholder="Description" required>
-            <input id="transaction-amount" type="number" placeholder="Amount" required>
-            <select id="transaction-category" aria-label="Transaction category" placeholder="Category name" required>
-                <option value="">Select a category</option>
-            </select>
-            <input id="transaction-date" type="date" aria-label="Transaction date" required>
-            <button type="submit">Add Transaction</button>
-        </form>
+            <form id="category-form" class="category-form">
+                <input id="category-symbol" type="text" placeholder="Symbol, ex: 🍔" maxlength="2">
+                <input id="category-name" type="text" placeholder="Category name" required>
+                <input id="category-limit" type="number" placeholder="Monthly limit" required>
+                <button type="submit">Add Category</button>
+            </form>
 
-        <div id="transaction-list" class="transaction-list"></div>
-</section>      
+            <div id="category-list" class="category-list"></div>
+        </section>
+
+        <section class="transaction-section dashboard-card">
+            <h2>Transactions</h2>
+
+            <form id="transaction-form" class="transaction-form">
+                <input id="transaction-description" type="text" placeholder="Description" required>
+                <input id="transaction-amount" type="number" placeholder="Amount" required>
+                <select id="transaction-category" aria-label="Transaction category" required>
+                    <option value="">Select a category</option>
+                </select>
+                <input id="transaction-date" type="date" aria-label="Transaction date" required>
+                <button type="submit">Add Transaction</button>
+            </form>
+
+            <div id="transaction-list" class="transaction-list"></div>
+        </section>
+    </main>
 
 <script type="module" src="src/dashboard.ts"></script>
 </body>

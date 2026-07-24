@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap');
 
 :root {
     --prim-color: #129e05;
@@ -136,4 +137,390 @@
 
 .income-chart-center div:last-child {
     font-size: 1.5rem;
+}
+
+body.dashboard-page {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Outfit', sans-serif;
+    background: #f3f6f1;
+    color: #1d3124;
+}
+
+.dashboard-page .dashboard-header {
+    position: relative;
+    margin: 0 auto;
+    padding: 32px 20px 24px;
+    text-align: center;
+    background: transparent;
+    color: #236d1d;
+}
+
+.dashboard-page .dashboard-header h1 {
+    margin: 0;
+    font-family: 'Lobster', sans-serif;
+    font-size: clamp(2.1rem, 3vw, 3.2rem);
+    letter-spacing: 0.5px;
+}
+
+.dashboard-page .dashboard-subtitle {
+    margin: 10px 0 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #2f4f3a;
+}
+
+.dashboard-page .logout-btn {
+    position: absolute;
+    top: 20px;
+    left: 24px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 10px 16px;
+    background: var(--sec-color);
+    color: #234515;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-page .logout-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(255, 196, 68, 0.35);
+}
+
+.dashboard-shell {
+    width: min(1180px, calc(100% - 2rem));
+    margin: 0 auto 36px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.dashboard-card {
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(31, 64, 40, 0.12);
+    backdrop-filter: blur(6px);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-card-wide {
+    grid-column: 1 / -1;
+}
+
+.dashboard-page .dashboard-card h2 {
+    margin: 0 0 14px;
+    font-size: 1.45rem;
+    color: #205f1f;
+}
+
+.dashboard-page .income-form,
+.dashboard-page .category-form,
+.dashboard-page .transaction-form {
+    display: grid;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 16px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    text-align: left;
+}
+
+.dashboard-page .income-form {
+    grid-template-columns: minmax(180px, 360px) auto;
+}
+
+.dashboard-page .category-form,
+.dashboard-page .transaction-form {
+    grid-template-columns: repeat(4, minmax(120px, 1fr));
+}
+
+.dashboard-page input,
+.dashboard-page select,
+.dashboard-page button {
+    height: 42px;
+    border-radius: 10px;
+    border: 1px solid #bdd7bf;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.98rem;
+}
+
+.dashboard-page input,
+.dashboard-page select {
+    padding: 0 12px;
+    background: #ffffff;
+}
+
+.dashboard-page .income-form button,
+.dashboard-page .category-form button,
+.dashboard-page .transaction-form button,
+.dashboard-page .delete-category,
+.dashboard-page .delete-transaction {
+    border: none;
+    background: var(--sec-color);
+    color: #234515;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-page .income-form button:hover,
+.dashboard-page .category-form button:hover,
+.dashboard-page .transaction-form button:hover,
+.dashboard-page .delete-category:hover,
+.dashboard-page .delete-transaction:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+    box-shadow: 0 8px 18px rgba(255, 196, 68, 0.35);
+}
+
+.dashboard-page .income-section {
+    margin: 0;
+}
+
+.dashboard-page .income-chart-wrapper {
+    position: relative;
+    width: min(100%, 760px);
+    height: 380px;
+    margin: 0 auto;
+}
+
+.dashboard-page .category-list,
+.dashboard-page .transaction-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+}
+
+.dashboard-page .category-item,
+.dashboard-page .transaction-item {
+    width: auto;
+    min-height: 0;
+    padding: 16px;
+    border-radius: 14px;
+    background: #ffffff;
+    border: 1px solid #d7e7d2;
+    box-shadow: 0 6px 18px rgba(25, 84, 37, 0.1);
+}
+
+.dashboard-page .transaction-item p,
+.dashboard-page .category-item p {
+    color: #31513a;
+}
+
+.dashboard-page .delete-category,
+.dashboard-page .delete-transaction {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    height: auto;
+}
+
+body.home-page,
+body.auth-page {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Outfit', sans-serif;
+    background: #f3f6f1;
+    color: #1d3124;
+}
+
+.home-page .home-header,
+.auth-page .auth-header {
+    position: relative;
+    margin: 0 auto;
+    padding: 46px 20px 30px;
+    text-align: center;
+    background: transparent;
+    color: #236d1d;
+}
+
+.home-page .home-header h1,
+.auth-page .auth-header h1 {
+    margin: 0;
+    font-family: 'Lobster', sans-serif;
+    font-size: clamp(2rem, 3vw, 3rem);
+    letter-spacing: 0.4px;
+}
+
+.home-page .home-subtitle,
+.auth-page .auth-subtitle {
+    margin: 10px 0 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #2f4f3a;
+}
+
+.home-shell {
+    width: min(980px, calc(100% - 2rem));
+    margin: 12px auto 56px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+}
+
+.home-card,
+.auth-card {
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(31, 64, 40, 0.12);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.home-card h2 {
+    margin: 0 0 12px;
+    font-size: 1.35rem;
+    color: #205f1f;
+}
+
+.home-page .home-preview p {
+    margin: 0;
+    color: #3b5b44;
+}
+
+.home-page .home-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 16px;
+}
+
+.home-page .home-buttons button,
+.auth-page .auth-form button,
+.auth-page .back-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 10px 18px;
+    background: var(--sec-color);
+    color: #234515;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.98rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home-page .home-buttons button:hover,
+.auth-page .auth-form button:hover,
+.auth-page .back-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+    box-shadow: 0 8px 18px rgba(255, 196, 68, 0.35);
+}
+
+.auth-page .back-btn {
+    position: absolute;
+    top: 20px;
+    left: 24px;
+}
+
+.auth-shell {
+    width: min(560px, calc(100% - 2rem));
+    margin: 0 auto 36px;
+}
+
+.auth-form {
+    display: grid;
+    gap: 10px;
+}
+
+.auth-form label {
+    font-weight: 600;
+    color: #2f4f3a;
+}
+
+.auth-form input {
+    height: 42px;
+    border-radius: 10px;
+    border: 1px solid #bdd7bf;
+    padding: 0 12px;
+    background: #ffffff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.98rem;
+}
+
+.auth-page .auth-form button {
+    margin-top: 8px;
+    height: 42px;
+}
+
+@media (max-width: 980px) {
+    .dashboard-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-card-wide {
+        grid-column: auto;
+    }
+
+    .dashboard-page .income-form,
+    .dashboard-page .category-form,
+    .dashboard-page .transaction-form {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .dashboard-page .dashboard-header {
+        padding-top: 74px;
+    }
+
+    .dashboard-page .logout-btn {
+        top: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .dashboard-page .logout-btn:hover {
+        transform: translateX(-50%) translateY(-1px);
+    }
+
+    .dashboard-shell {
+        width: min(1180px, calc(100% - 1rem));
+        gap: 14px;
+    }
+
+    .dashboard-card {
+        padding: 14px;
+    }
+
+    .dashboard-page .income-form,
+    .dashboard-page .category-form,
+    .dashboard-page .transaction-form {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-page .income-chart-wrapper {
+        height: 300px;
+    }
+
+    .home-shell {
+        width: min(980px, calc(100% - 1rem));
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .home-card,
+    .auth-card {
+        padding: 16px;
+    }
+
+    .auth-page .auth-header {
+        padding-top: 74px;
+    }
+
+    .auth-page .back-btn {
+        top: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .auth-page .back-btn:hover {
+        transform: translateX(-50%) translateY(-1px);
+    }
 }
