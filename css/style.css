@@ -164,6 +164,11 @@ body.dashboard-page {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
+}
+
+.dashboard-page .dashboard-header-actions button {
+    min-width: 120px;
 }
 
 .dashboard-page .dashboard-header h1 {
@@ -492,14 +497,8 @@ body.auth-page {
         padding-top: 74px;
     }
 
-    .dashboard-page .logout-btn {
+    .dashboard-page .dashboard-header-actions {
         top: 18px;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
-    .dashboard-page .logout-btn:hover {
-        transform: translateX(-50%) translateY(-1px);
     }
 
     .dashboard-shell {
@@ -538,11 +537,11 @@ body.auth-page {
 
     .auth-page .back-btn {
         top: 18px;
-        left: 50%;
-        transform: translateX(-50%);
+        left: 24px;
+        transform: none;
     }
 
     .auth-page .back-btn:hover {
-        transform: translateX(-50%) translateY(-1px);
+        transform: translateY(-1px);
     }
 }

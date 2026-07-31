@@ -1,6 +1,25 @@
 import Chart from 'chart.js/auto';
 import { supabase } from './supabaseClient';
 
+type BudgetCategory = {
+    category_id: string;
+    name: string;
+    symbol?: string;
+    limit: number;
+    amount_remaining: number;
+};
+
+type TransactionItem = {
+    transaction_id: string;
+    label: string;
+    amount: number;
+    transaction_date: string;
+    budget_categories?: {
+        symbol?: string;
+        name?: string;
+    };
+};
+
 const logoutBtn = document.querySelector('#logout-btn') as HTMLButtonElement;
 const deleteAccountBtn = document.querySelector('#delete-account-btn') as HTMLButtonElement;
 logoutBtn?.addEventListener('click', async () => {
@@ -194,7 +213,7 @@ async function fetchTransactions() {
     
     transactionList.innerHTML = '';
 
-    (transactions || []).forEach((transaction) => {
+    (transactions || []).forEach((transaction: TransactionItem) => {
         if (!transaction.transaction_date || !isCurrentMonthDate(transaction.transaction_date)) {
             return;
         }
@@ -238,7 +257,7 @@ async function fetchCategories() {
 
     categoryList.innerHTML = ''; 
 
-    categories.forEach((category) => {
+    (categories || []).forEach((category: BudgetCategory) => {
         const card = document.createElement('div');
         card.className = 'category-item';
         card.innerHTML = `
@@ -252,8 +271,8 @@ async function fetchCategories() {
         `;
         categoryList.appendChild(card);
     });
-    await renderIncomeChart(categories);
-    populateTransactionCategories(categories);
+    await renderIncomeChart(categories as BudgetCategory[]);
+    populateTransactionCategories(categories as BudgetCategory[]);
 }
 
 async function populateTransactionCategories(categories: any[]) {
