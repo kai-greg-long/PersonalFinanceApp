@@ -6,20 +6,27 @@
     <title>Sign Up</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+<body class="auth-page">
+    <header class="header auth-header">
+        <button onclick="location.href='index.html'" class="back-btn">&#8592; Back</button>
 <body>
     <div class="header">
         <button onclick="location.href='index.html'">&#8592; Back</button>
         <h1>Sign Up</h1>
-    </div>
-    <div class="form">
-        <form id="signup-form">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required><br><br>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br><br>
-            <input type="submit" value="Sign Up">
-        </form>
-    </div>
+        <p class="auth-subtitle">Create your account and start planning your spending.</p>
+    </header>
+
+    <main class="auth-shell">
+        <section class="auth-card">
+            <form id="signup-form" class="auth-form">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <button type="submit">Sign Up</button>
+            </form>
+        </section>
+    </main>
 <script type="module" src="/src/signup.ts"></script>
 </body>
 </html>
