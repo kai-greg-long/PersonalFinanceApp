@@ -17,6 +17,17 @@
     <main class="dashboard-shell">
         <section class="income-section dashboard-card dashboard-card-wide">
             <h2>Monthly Income</h2>
+<body>
+    <div class="header">
+        <button id="logout-btn">Log Out</button>
+        <h1>Dashboard</h1>
+    </div>
+
+<main class="dashboard-main">
+
+    <section class="income-section">
+        <h1 class="section-title">Monthly Income</h1>
+        <div class="income-content">
             <form id="income-form" class="income-form">
                 <input id="income-amount" type="number" placeholder="Enter your monthly income" required>
                 <button type="submit">Set Income</button>
@@ -56,6 +67,38 @@
             <div id="transaction-list" class="transaction-list"></div>
         </section>
     </main>
+            <div class="income-chart-wrapper">
+                <canvas id="income-chart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <section class="category-section">
+        <h1 class="section-title">Budget Categories</h1>
+        <form id="category-form" class="category-form">
+            <input id="category-symbol" type="text" placeholder="Symbol, ex: 🍔" maxlength="2">
+            <input id="category-name" type="text" placeholder="Category name" required>
+            <input id="category-limit" type="number" placeholder="Monthly limit" required>
+            <button type="submit">Add Category</button>
+        </form>
+        <div id="category-list" class="category-list"></div>
+    </section>
+
+    <section class="transaction-section">
+        <h1 class="section-title">Transactions</h1>
+        <form id="transaction-form" class="transaction-form">
+            <input id="transaction-description" type="text" placeholder="Description" required>
+            <input id="transaction-amount" type="number" placeholder="Amount" required>
+            <select id="transaction-category" aria-label="Transaction category" required>
+                <option value="">Select a category</option>
+            </select>
+            <input id="transaction-date" type="date" aria-label="Transaction date" required>
+            <button type="submit">Add Transaction</button>
+        </form>
+        <div id="transaction-list" class="transaction-list"></div>
+    </section>
+
+</main>      
 
 <script type="module" src="src/dashboard.ts"></script>
 </body>
