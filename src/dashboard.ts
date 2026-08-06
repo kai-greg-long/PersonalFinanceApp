@@ -1,6 +1,25 @@
 import Chart from 'chart.js/auto';
 import { supabase } from './supabaseClient';
 
+await supabase.auth.getSession();
+
+async function ensureAuthenticated() {
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (error || !user) {
+        window.location.replace('login.html');
+        return false;
+    }
+
+    return true;
+}
+
+const isAuthenticated = await ensureAuthenticated();
+
+if (!isAuthenticated) {
+    throw new Error('User is not authenticated');
+}
+
 type BudgetCategory = {
     category_id: string;
     name: string;
@@ -462,9 +481,11 @@ transactionList.addEventListener('click', async (event) => {
         }
 });
 
-await fetchIncome();
-await fetchCategories();
-await fetchTransactions();
+if (isAuthenticated) {
+    await fetchIncome();
+    await fetchCategories();
+    await fetchTransactions();
+}
 
 categoryForm.addEventListener('submit', async (event) => {
     event.preventDefault();
