@@ -1,19 +1,6 @@
 import Chart from 'chart.js/auto';
 import { supabase } from './supabaseClient';
 
-await supabase.auth.getSession();
-
-async function ensureAuthenticated() {
-    const { data: { user }, error } = await supabase.auth.getUser();
-
-    if (error || !user) {
-        window.location.replace('login.html');
-        return false;
-    }
-
-    return true;
-}
-
 const isAuthenticated = await ensureAuthenticated();
 
 if (!isAuthenticated) {
@@ -95,6 +82,16 @@ const categoryName = document.querySelector('#category-name') as HTMLInputElemen
 const categoryLimit = document.querySelector('#category-limit') as HTMLInputElement;
 
 let incomeChart: Chart<'doughnut'> | null = null;
+
+async function ensureAuthenticated() {
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (error || !user) {
+        window.location.replace('login.html');
+        return false;
+    }
+    return true;
+}
 
 function renderIncomeChart(Categories: any[]) {
 
@@ -264,19 +261,47 @@ async function fetchCategories() {
         return;
     }
 
-    const { data: categories, error: categoryError } = await supabase
-        .from('budget_categories')
-        .select('*')
-        .eq('user_id', user.id);
+    const { start, end } = getCurrentMonthRange();
+
+    const [{ data: categories, error: categoryError }, { data: monthlyTransactions, error: monthlyTransactionsError }] = await Promise.all([
+        supabase
+            .from('budget_categories')
+            .select('*')
+            .eq('user_id', user.id),
+        supabase
+            .from('transactions')
+            .select('amount, category_id')
+            .eq('user_id', user.id)
+            .gte('transaction_date', start)
+            .lt('transaction_date', end)
+    ]);
 
     if (categoryError) {
         alert(categoryError.message);
         return;
     }
 
-    categoryList.innerHTML = ''; 
+    if (monthlyTransactionsError) {
+        alert(monthlyTransactionsError.message);
+        return;
+    }
 
-    (categories || []).forEach((category: BudgetCategory) => {
+    const monthlySpendingByCategory = (monthlyTransactions || []).reduce<Record<string, number>>((totals, transaction: { category_id: string; amount: number }) => {
+        const categoryId = transaction.category_id;
+        const amount = Number(transaction.amount) || 0;
+
+        totals[categoryId] = (totals[categoryId] || 0) + amount;
+        return totals;
+    }, {});
+
+    const categoriesWithRemaining = (categories || []).map((category: BudgetCategory) => ({
+        ...category,
+        amount_remaining: Number(category.limit) - (monthlySpendingByCategory[category.category_id] || 0)
+    }));
+
+    categoryList.innerHTML = '';
+
+    categoriesWithRemaining.forEach((category: BudgetCategory) => {
         const card = document.createElement('div');
         card.className = 'category-item';
         card.innerHTML = `
@@ -290,8 +315,9 @@ async function fetchCategories() {
         `;
         categoryList.appendChild(card);
     });
-    await renderIncomeChart(categories as BudgetCategory[]);
-    populateTransactionCategories(categories as BudgetCategory[]);
+
+    await renderIncomeChart(categoriesWithRemaining as BudgetCategory[]);
+    populateTransactionCategories(categoriesWithRemaining as BudgetCategory[]);
 }
 
 async function populateTransactionCategories(categories: any[]) {
@@ -304,30 +330,6 @@ async function populateTransactionCategories(categories: any[]) {
         option.textContent = category.name;
         transactionCategory.appendChild(option);
     });
-}
-
-async function updateCategoryRemaining(categoryId: string, amountToSubtract: number) {
-    const { data: category, error: fetchError } = await supabase
-        .from('budget_categories')
-        .select('amount_remaining')
-        .eq('category_id', categoryId)
-        .single();
-
-    if (fetchError) {
-        throw new Error(fetchError.message);
-    }
-
-    const currentRemaining = Number(category?.amount_remaining) || 0;
-    const newRemaining = currentRemaining - amountToSubtract;
-
-    const { error: updateError } = await supabase
-        .from('budget_categories')
-        .update({ amount_remaining: newRemaining })
-        .eq('category_id', categoryId);
-
-    if (updateError) {
-        throw new Error(updateError.message);
-    }
 }
 
 incomeForm.addEventListener('submit', async (event) => {
@@ -404,24 +406,7 @@ transactionForm.addEventListener('submit', async (event) => {
             return;
         }
 
-    try {
-        await updateCategoryRemaining(categoryInput.value, amountValue);
-    } catch (updateRemainingError) {
-            if (createdTransaction?.transaction_id) {
-                await supabase
-                    .from('transactions')
-                    .delete()
-                    .eq('transaction_id', createdTransaction.transaction_id);
-            }
-
-        const errorMessage = updateRemainingError instanceof Error
-            ? updateRemainingError.message
-                : 'Failed to update category remaining amount. Transaction was reverted.';
-        alert(errorMessage);
-            return;
-    }
-
-        alert('Transaction added successfully.');
+    alert('Transaction added successfully.');
     transactionForm.reset();
     await fetchCategories();
     await fetchTransactions();
@@ -477,6 +462,7 @@ transactionList.addEventListener('click', async (event) => {
         if (error) {
             alert(error.message);
         } else {
+            await fetchCategories();
             await fetchTransactions();
         }
 });
